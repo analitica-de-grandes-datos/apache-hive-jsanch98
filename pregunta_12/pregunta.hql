@@ -29,10 +29,11 @@ CREATE TABLE t0 (
         LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 
-/*
-    >>> Escriba su respuesta a partir de este punto <<<
-*/
-INSERT OVERWRITE LOCAL DIRECTORY 'output'
+INSERT OVERWRITE LOCAL DIRECTORY './output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
 
-SELECT letter, letters, count(letters) AS count FROM t0 LATERAL VIEW explode(c2) t0 AS letter LATERAL VIEW explode(c3) t0 AS letters, numbers GROUP BY letter, letters;
+SELECT letter, key, COUNT(*) FROM t0
+LATERAL VIEW EXPLODE(c2) t0 AS letter
+LATERAL VIEW EXPLODE(c3) t0 AS key, value
+GROUP BY letter, key;
